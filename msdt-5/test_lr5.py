@@ -48,4 +48,27 @@ def test_calculate_neighbors_mock():
         assert mocked_grid[0][0] == 1, "Клетка (0, 0) должна показывать 1 мину-соседа"
         assert mocked_grid[1][0] == 1, "Клетка (1, 0) должна показывать 1 мину-соседа"
         assert mocked_grid[0][1] == -1, "Клетка с миной не должна изменяться"
-        
+
+
+def test_game_over_on_bomb():
+    minesweeper.game_over = False
+    minesweeper.bombs = [(0, 0)]
+    minesweeper.grid = [[0 for _ in range(minesweeper.GRID_SIZE)] for _ in range(minesweeper.GRID_SIZE)]
+    minesweeper.grid[0][0] = -1
+    minesweeper.revealed = [[False for _ in range(minesweeper.GRID_SIZE)] for _ in range(minesweeper.GRID_SIZE)]
+
+    minesweeper.open_cell(0, 0)
+    assert minesweeper.game_over, "Игра должна завершиться при открытии клетки с миной"
+
+
+def test_neighbor_display():
+    minesweeper.game_over = False
+    minesweeper.bombs = [(1, 1)]
+    minesweeper.grid = [[0 for _ in range(minesweeper.GRID_SIZE)] for _ in range(minesweeper.GRID_SIZE)]
+    minesweeper.grid[1][1] = -1
+    minesweeper.calculate_neighbors()
+    minesweeper.revealed = [[False for _ in range(minesweeper.GRID_SIZE)] for _ in range(minesweeper.GRID_SIZE)]
+
+    minesweeper.open_cell(0, 0)  
+    assert minesweeper.revealed[0][0], "Клетка (0, 0) должна быть открыта"
+    assert minesweeper.grid[0][0] == 1, "Клетка (0, 0) должна показывать 1 мину-соседа"
